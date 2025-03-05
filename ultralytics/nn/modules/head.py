@@ -7,6 +7,7 @@ import math
 import torch
 import torch.nn as nn
 from torch.nn.init import constant_, xavier_uniform_
+import inspect
 
 from ultralytics.utils.tal import TORCH_1_10, dist2bbox, dist2rbox, make_anchors
 
@@ -189,6 +190,11 @@ class Segment(Detect):
         """Return model outputs and mask coefficients if training, otherwise return outputs and mask coefficients."""
         p = self.proto(x[0])  # mask protos
         bs = p.shape[0]  # batch size
+        print("THis is Mask Coefficient shape", p.shape)
+        stack = inspect.stack()
+        print("Call Stack:")
+        for frame in stack:
+            print(f"Function: {frame.function}, File: {frame.filename}, Line: {frame.lineno}")
 
         mc = torch.cat([self.cv4[i](x[i]).view(bs, self.nm, -1) for i in range(self.nl)], 2)  # mask coefficients
         x = Detect.forward(self, x)

@@ -4,6 +4,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import inspect
 
 from ultralytics.utils.torch_utils import fuse_conv_and_bn
 
@@ -90,6 +91,11 @@ class Proto(nn.Module):
         self.cv3 = Conv(c_, c2)
 
     def forward(self, x):
+        stack = inspect.stack()
+        print("Call Stack:")
+        for frame in stack:
+            print(f"Function: {frame.function}, File: {frame.filename}, Line: {frame.lineno}")
+
         """Performs a forward pass through layers using an upsampled input image."""
         return self.cv3(self.cv2(self.upsample(self.cv1(x))))
 

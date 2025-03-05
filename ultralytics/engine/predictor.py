@@ -268,15 +268,16 @@ class BasePredictor:
 
                 # Visualize, save, write results
                 n = len(im0s)
-                for i in range(n):
-                    self.seen += 1
-                    self.results[i].speed = {
-                        "preprocess": profilers[0].dt * 1e3 / n,
-                        "inference": profilers[1].dt * 1e3 / n,
-                        "postprocess": profilers[2].dt * 1e3 / n,
-                    }
-                    if self.args.verbose or self.args.save or self.args.save_txt or self.args.show:
-                        s[i] += self.write_results(i, Path(paths[i]), im, s)
+                if hasattr(self.results[0], 'speed'):   #Skip is Speed is not in attributes
+                    for i in range(n):
+                        self.seen += 1
+                        self.results[i].speed = {
+                            "preprocess": profilers[0].dt * 1e3 / n,
+                            "inference": profilers[1].dt * 1e3 / n,
+                            "postprocess": profilers[2].dt * 1e3 / n,
+                        }
+                        if self.args.verbose or self.args.save or self.args.save_txt or self.args.show:
+                            s[i] += self.write_results(i, Path(paths[i]), im, s)
 
                 # Print batch results
                 if self.args.verbose:
